@@ -1,7 +1,4 @@
 ---
-- import_role:
-    name: micko920.homelab_base_system
-
 # tasks file for service
 - name: install required packages
   package:
