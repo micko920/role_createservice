@@ -10,12 +10,28 @@
   notify:
     - gather facts
 
+- name: set init systemd
+  set_fact:
+    service_mgr_use: "systemd"
+  when:
+    - ansible_service_mgr == "systemd"
+    - service_mgr_use is not defined
+
+- name: set init sysvinit
+  set_fact:
+    service_mgr_use: "sysvinit"
+  when:
+    - service_mgr_use is not defined
+    - ansible_service_mgr == "sysvinit" or
+      ansible_service_mgr == "upstart" or
+      ansible_service_mgr == "openrc"
+
 - name: configure systemd service
   template:
     src: "systemd.j2"
     dest: "/etc/systemd/system/{{ item.name }}.service"
   when:
-    - ansible_service_mgr == "systemd"
+    - service_mgr_use == "systemd"
   notify:
     - systemctl daemon-reload
   with_items:
@@ -29,9 +45,7 @@
     dest: "/etc/init.d/{{ item.name }}"
     mode: "0755"
   when:
-    - ansible_service_mgr == "sysvinit" or
-      ansible_service_mgr == "upstart" or
-      ansible_service_mgr == "openrc"
+    - service_mgr_use == "sysvinit"
   with_items:
     - "{{ service_list }}"
   loop_control:
