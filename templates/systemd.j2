@@ -1,6 +1,7 @@
 {{ ansible_managed | comment }}
 [Unit]
 Description={{ item.description }}
+After={{ item.after }}
 
 [Service]
 {% if item.type is defined and item.type != "simple" %}
