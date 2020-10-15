@@ -26,6 +26,9 @@ ExecStop={{ item.stop_command }}
 {% for key in item.environment_variables %}
 Environment={{ key }}={{ item.environment_variables[key] }}
 {% endfor %}
+{% if item.remain_after_exit is defined %}
+RemainAfterExit={{ item.remain_after_exit }}
+{% endif %}
 {% endif %}
 
 [Install]
