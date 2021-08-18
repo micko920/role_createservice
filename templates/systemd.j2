@@ -1,8 +1,14 @@
 {{ ansible_managed | comment }}
 [Unit]
 Description={{ item.description }}
+{% if item.documentation is defined %}
+Documentation={{ item.documentation }}
+{% endif %}
 {% if item.after is defined %}
 After={{ item.after }}
+{% endif %}
+{% if item.requires is defined %}
+Requires={{ item.requires }}
 {% endif %}
 
 [Service]
@@ -22,14 +28,24 @@ ExecStart={{ item.start_command }}
 {% if item.stop_command is defined %}
 ExecStop={{ item.stop_command }}
 {% endif %}
+{% if item.reload_command is defined %}
+ExecReload={{ item.reload_command }}
+{% endif %}
 {% if item.environment_variables is defined %}
 {% for key in item.environment_variables %}
 Environment={{ key }}={{ item.environment_variables[key] }}
 {% endfor %}
+{% endif %}
 {% if item.remain_after_exit is defined %}
 RemainAfterExit={{ item.remain_after_exit }}
 {% endif %}
+{% if item.extra_values is defined %}
+{% for key in item.extra_values %}
+{{ key }}={{ item.extra_values[key] }}
+{% endfor %}
 {% endif %}
 
 [Install]
 WantedBy=multi-user.target
+
+
