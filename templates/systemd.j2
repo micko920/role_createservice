@@ -40,7 +40,7 @@ Environment={{ key }}={{ item.environment_variables[key] }}
 RemainAfterExit={{ item.remain_after_exit }}
 {% endif %}
 {% if item.extra_values is defined %}
-{% for key in item.extra_values %}
+{% for key in item.extra_values|sort %}
 {{ key }}={{ item.extra_values[key] }}
 {% endfor %}
 {% endif %}
